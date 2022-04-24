@@ -25,6 +25,7 @@ class Minesweeper {
     this.opened = [];
     this.flagged = [];
     this.gameOver = false;
+    this.hasLost = false;
     this.createSquares();
     this.hideMessage();
     this.render();
@@ -75,6 +76,7 @@ class Minesweeper {
       this.click(i, j)
     } else {
       this.opened.push([i, j]);
+      this.hasLost = true;
       this.render();
       this.showMessage('You lost')
     }
@@ -105,6 +107,7 @@ class Minesweeper {
     this.open(i, j);
     this.render();
     if (this.hasWon()) {
+      this.render();
       this.showMessage('You won!');
     }
   }
@@ -141,11 +144,14 @@ class Minesweeper {
   }
 
   drawing(i, j) {
+    if (this.hasLost && this.get(i, j) === 'b') {
+      return '💣';
+    }
     if (this.hasOpened(i, j)) {
       if (this.get(i, j) === 'b') {
         return '💣';
       } else {
-        return this.count(i, j);
+        return this.count(i, j) || '';
       }
     } else if (this.hasFlagged(i, j)) {
       return '🚩';
